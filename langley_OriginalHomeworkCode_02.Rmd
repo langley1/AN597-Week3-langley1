@@ -1,0 +1,46 @@
+---
+title: "langley1_OriginalHomeworkCode_02"
+output: html_document
+---
+***
+
+Homework 2: Titis in the Mist
+
+***
+
+This is my code for [Homework 2](https://fuzzyatelin.github.io/bioanth-stats/homework-02.html)
+>Every Saturday morning, at the same time, a primatologist goes and sits in the forest to listen for titi monkey calls, counting the number of calls they hear in a 2 hour window from 5am to 7am. Based on previous knowledge, she believes that the mean number of calls she will hear in that time is exactly 15. Let X represent the appropriate Poisson random variable of the number of calls heard in each monitoring session.
+
+We want to use the Poisson Distribution because it is often used to model open ended counts of independently occuring events, i.e the number of times a monkey calls in a given interval
+
+The Poisson distribution function, ppois(), returns the value of the cumulative distribution function, i.e., the probability of observing up to and including a specific number of events in the given interval (so this relates to the question)
+
+##Question 1 
+What is the probability that she will hear more than 8 calls during any given session?
+```{r}
+#We know that the mean number of calls is 15, so lambda= 15
+#We know that the number of successes should be 8+, so q=8
+x<- 0:8
+x<- 3
+x<- 0
+
+ppois()
+
+
+```
+
+4) Plot the relevant Poisson mass function over the values in range 0 ≤ x ≤ 30.
+```{r}
+x <- 0:30
+l = 15
+probset<- dpois(x=x,lambda=l)
+barplot(probset,names.arg=x,space=0,xlab="x",ylab="Pr(X = x)",main="Probability Mass Function")
+```
+
+x<- 0:30
+l<- 15
+
+for (i in 1:10000){
+    set[i] <- ppois(q=x,lambda=l))
+}
+
