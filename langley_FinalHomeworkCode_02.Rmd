@@ -1,0 +1,119 @@
+---
+title: "langley1_OriginalHomeworkCode_02"
+output: html_document
+---
+***
+
+# **Homework 2: Titis in the Mist**
+
+***
+
+This is my code for [Homework 2](https://fuzzyatelin.github.io/bioanth-stats/homework-02.html)
+
+> Every Saturday morning, at the same time, a primatologist goes and sits in the forest to listen for titi monkey calls, counting the number of calls they hear in a 2 hour window from 5am to 7am. Based on previous knowledge, she believes that the mean number of calls she will hear in that time is exactly 15. Let X represent the appropriate Poisson random variable of the number of calls heard in each monitoring session.
+
+We want to use the Poisson Distribution because it is often used to model open ended counts of independently occuring events, i.e the number of times a monkey calls in a given interval
+
+The Poisson distribution function, ppois(), returns the value of the cumulative distribution function, i.e., the probability of observing up to and including a specific number of events in the given interval (so this relates to the question)
+
+## Question 1 
+
+What is the probability that she will hear more than 8 calls during any given session?
+```{r}
+#We know that the mean number of calls is 15, so lambda= 15
+#We know that the number of successes should be >8 but we can't put "9:infinity" for our q value... but we can find the probability for 0:8 and then take the inverse of that for >8... lets try it!
+
+q<- 0:8
+l<- 15
+prob1.2<- ppois(q, l, lower.tail = TRUE, log.p = FALSE)
+prob1.2 #3.059023e-07 4.894437e-06 3.930845e-05 2.113785e-04 8.566412e-04 2.792429e-03 7.631900e-03 1.800219e-02 3.744649e-02
+
+#If these numbes above are showing me all of the probabilities for the range of 0 - 8 calls, then I'm going to add them up and take the inverse of that number
+ProbSum<- sum(prob1.2) #0.067
+CallsProb<- 1 - ProbSum
+CallsProb #The probability she will hear more than 8 calls = 0.933
+
+#Overall, I have absolutely no idea if this is right. This probability seems too high to me.
+
+#Ok so based on Lara's comments, I would just do...
+q<- 8
+l<- 15
+prob1.3<- ppois(q, l, lower.tail = FALSE)
+prob1.3 #0.963
+
+#Now I think I have a better understanding of what "lower.tail =" is actually asking. If I change the code to "lower.tail = TRUE" I get...
+q<- 8
+l<- 15
+prob1.4<- ppois(q, l, lower.tail = TRUE)
+prob1.4 #0.0375
+
+#And then I take the inverse of it I should get the same number as prob1.3
+1- prob1.4 #0.963
+
+```
+ 
+## Question 2
+
+### 2) What is the probability that she will hear no calls in a session?
+```{r}
+#Now we need to adjust our q value to 0 but we can keep lamda at 15
+x<- 0
+l<- 15
+prob2<- dpois(x, l)
+prob2 
+```
+
+## Question 3
+
+### 3) What is the probability that she will hear exactly 3 calls in a session?
+```{r}
+#Now we can change our q value to equal 3 (note: the q value doesn't always need to be a range of numbers i.e. 0:100)
+q<- 3
+l<- 15
+prob3<- ppois(q, lambda = l)
+prob3 
+```
+
+## Question 4
+
+### 4) Plot the relevant Poisson mass function over the values in range 0 ≤ x ≤ 30.
+```{r}
+x <- 0:30
+l = 15
+prob4<- dpois(x=x,lambda=l)
+barplot(prob4,names.arg=x,space=0,xlab="Number of Calls",ylab="Probaility",main="Probability Mass Function")
+```
+
+## Question 5
+
+### 5) Simulate 104 results from this distribution (i.e., 2 years of Saturday monitoring sessions).
+```{r}
+#For simulations, we want to use Bootstrapping, 
+#x <- 0:30
+#l = 15
+#set<- NULL #This is setting up a dummy variable to hold our 104 simulations
+#for (i in 1:104){
+   # set[i] <- ppois(q=x,lambda = l)
+#}
+#This does not work!!! It returns a very crazy, long error (which you see if you knit this so I'm putting putting it as non-code for now), I have no idea how to set up the bootstrapping to make this work. So I did some research and came across rpois() for simulations, hopefully this one works better
+
+sim<- rpois(104, lambda = 15)
+sim #Yes this works much better 
+
+```
+
+## Question 6
+
+### 6) Plot the simulated results using hist() and use xlim() to set the horizontal limits to be from 0 to 30. How does your histogram compare to the shape of the probability mass function you plotted above?
+```{r}
+plot<- hist(sim, xlim = c(0,30), xlab = "Calls over 104 simulations", main = "Histogram")
+
+#This histogram is pretty similar to the barplot using dpois(). They both have the highest probability/frequency around 14 calls with a range of ~5-28. The probability mass function plot is more evenly distributed across the range where the histogram is not and even has a break at 25 calls having 0 frequency.
+```
+
+## CHALLENGES
+
+1. I still don't fully understand the difference between ppois() and dpois() and when to use them appropriately. I think I am confusing myself more because now I don't understand why ppois() should be used for question #3, which is asking for exactly 3 calls. That's not a range of values so why wouldn't we use dpois()? 
+2. I would still like to understand why my bootstrapping attempt using the for loops didn't work. Very frustrating!
+3. I don't fully understand the difference between cumulative probabiltiy and probability mass function and how you choose which one you want to look it. 
+
