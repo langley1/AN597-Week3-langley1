@@ -16,7 +16,7 @@ We want to use the Poisson Distribution because it is often used to model open e
 
 The Poisson distribution function, ppois(), returns the value of the cumulative distribution function, i.e., the probability of observing up to and including a specific number of events in the given interval (so this relates to the question)
 
-## Question 1 
+### Question 1 
 
 What is the probability that she will hear more than 8 calls during any given session?
 ```{r}
@@ -34,6 +34,7 @@ CallsProb<- 1 - ProbSum
 CallsProb #The probability she will hear more than 8 calls = 0.933
 
 #Overall, I have absolutely no idea if this is right. This probability seems too high to me.
+#So making q= a range of values like this is useful for if you want to plot it, it gives you the probabilities for all of the numbers in that range
 
 #Ok so based on Lara's comments, I would just do...
 q<- 8
@@ -50,22 +51,31 @@ prob1.4 #0.0375
 #And then I take the inverse of it I should get the same number as prob1.3
 1- prob1.4 #0.963
 
+#Another Solution from Class:
+q<- 8
+lamba<- 15
+1- ppois(8,15)
+
 ```
  
 ## Question 2
 
-### 2) What is the probability that she will hear no calls in a session?
+What is the probability that she will hear no calls in a session?
 ```{r}
 #Now we need to adjust our q value to 0 but we can keep lamda at 15
 x<- 0
 l<- 15
 prob2<- dpois(x, l)
 prob2 
+
+#You get the same for ppois() but only because x = 0!!
+prob3<- ppois(x, l)
+prob3
 ```
 
 ## Question 3
 
-### 3) What is the probability that she will hear exactly 3 calls in a session?
+What is the probability that she will hear exactly 3 calls in a session?
 ```{r}
 #Now we can change our q value to equal 3 (note: the q value doesn't always need to be a range of numbers i.e. 0:100)
 q<- 3
@@ -76,7 +86,7 @@ prob3
 
 ## Question 4
 
-### 4) Plot the relevant Poisson mass function over the values in range 0 ≤ x ≤ 30.
+Plot the relevant Poisson mass function over the values in range 0 ≤ x ≤ 30.
 ```{r}
 x <- 0:30
 l = 15
@@ -86,7 +96,7 @@ barplot(prob4,names.arg=x,space=0,xlab="Number of Calls",ylab="Probaility",main=
 
 ## Question 5
 
-### 5) Simulate 104 results from this distribution (i.e., 2 years of Saturday monitoring sessions).
+Simulate 104 results from this distribution (i.e., 2 years of Saturday monitoring sessions).
 ```{r}
 #For simulations, we want to use Bootstrapping, 
 #x <- 0:30
@@ -104,9 +114,9 @@ sim #Yes this works much better
 
 ## Question 6
 
-### 6) Plot the simulated results using hist() and use xlim() to set the horizontal limits to be from 0 to 30. How does your histogram compare to the shape of the probability mass function you plotted above?
+Plot the simulated results using hist() and use xlim() to set the horizontal limits to be from 0 to 30. How does your histogram compare to the shape of the probability mass function you plotted above?
 ```{r}
-plot<- hist(sim, xlim = c(0,30), xlab = "Calls over 104 simulations", main = "Histogram")
+plot<- hist(sim, xlim = c(0,30), xlab = "Calls over 104 simulations", main = "Histogram", col="forestgreen")
 
 #This histogram is pretty similar to the barplot using dpois(). They both have the highest probability/frequency around 14 calls with a range of ~5-28. The probability mass function plot is more evenly distributed across the range where the histogram is not and even has a break at 25 calls having 0 frequency.
 ```
